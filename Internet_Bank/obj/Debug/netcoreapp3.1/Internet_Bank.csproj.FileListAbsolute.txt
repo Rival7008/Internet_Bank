@@ -1,0 +1,14 @@
+C:\Users\Anton\source\repos\Internet_Bank\Internet_Bank\obj\Debug\netcoreapp3.1\Internet_Bank.csproj.AssemblyReference.cache
+C:\Users\Anton\source\repos\Internet_Bank\Internet_Bank\obj\Debug\netcoreapp3.1\Internet_Bank.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Anton\source\repos\Internet_Bank\Internet_Bank\obj\Debug\netcoreapp3.1\Internet_Bank.AssemblyInfoInputs.cache
+C:\Users\Anton\source\repos\Internet_Bank\Internet_Bank\obj\Debug\netcoreapp3.1\Internet_Bank.AssemblyInfo.cs
+C:\Users\Anton\source\repos\Internet_Bank\Internet_Bank\obj\Debug\netcoreapp3.1\Internet_Bank.csproj.CoreCompileInputs.cache
+C:\Users\Anton\source\repos\Internet_Bank\Internet_Bank\bin\Debug\netcoreapp3.1\Internet_Bank.exe
+C:\Users\Anton\source\repos\Internet_Bank\Internet_Bank\bin\Debug\netcoreapp3.1\Internet_Bank.deps.json
+C:\Users\Anton\source\repos\Internet_Bank\Internet_Bank\bin\Debug\netcoreapp3.1\Internet_Bank.runtimeconfig.json
+C:\Users\Anton\source\repos\Internet_Bank\Internet_Bank\bin\Debug\netcoreapp3.1\Internet_Bank.runtimeconfig.dev.json
+C:\Users\Anton\source\repos\Internet_Bank\Internet_Bank\bin\Debug\netcoreapp3.1\Internet_Bank.dll
+C:\Users\Anton\source\repos\Internet_Bank\Internet_Bank\bin\Debug\netcoreapp3.1\Internet_Bank.pdb
+C:\Users\Anton\source\repos\Internet_Bank\Internet_Bank\obj\Debug\netcoreapp3.1\Internet_Bank.dll
+C:\Users\Anton\source\repos\Internet_Bank\Internet_Bank\obj\Debug\netcoreapp3.1\Internet_Bank.pdb
+C:\Users\Anton\source\repos\Internet_Bank\Internet_Bank\obj\Debug\netcoreapp3.1\Internet_Bank.genruntimeconfig.cache
