@@ -7,7 +7,7 @@ namespace Internet_Bank
     {
         static void Main(string[] args)
         {
-            int Users = 0;
+            int User = 0;
 
             // Jagged Array with the users money accounts
             double[][] accountmoney = new double[5][];
@@ -22,82 +22,88 @@ namespace Internet_Bank
 
             for (int phase = 0; phase <= 2; phase++) // tracks what phase in the bank we are in
             {
-                if (phase != -1 && Users != -2) // checker to see if the user is allowed in the bank
+
+
+                switch (phase)
                 {
-                    switch (phase)
-                    {
-                        case 0:
-                            welcome();
+                    case 0:
+                        Welcome();
+                        break;
+                    case 1:
+                        string[,] accounts = Users();
+                        User = Login(accounts);
+                        break;
+                    case 2:
+                        string[,] accounts2 = Users();
+                        int choice = Menu(accounts2);
+                        switch (choice)
+                        {
+                            case 1:
+                                AccountCheck(accountmoney[User]);
+                                phase = MenuReturn();
+                                break;
+                            case 2:
+                                AccountCheck(accountmoney[User]);
+                                (phase, ChoiceSaver[0]) = From(accountmoney[User], 1);
+                                if (phase == -2) { Environment.Exit(0); }
+                                (phase, ChoiceSaver[1]) = To(accountmoney[User], ChoiceSaver);
+                                if (phase == -2) { Environment.Exit(0); }
+                                (phase, ChoiceSaver[2]) = Amount(accountmoney[User], ChoiceSaver, 1);
+                                if (phase == -2) { Environment.Exit(0); }
+                                Message(accountmoney[User], ChoiceSaver, 1);
+                                (phase) = PinCode(User);
+                                if (phase == -2) { Environment.Exit(0); }
+                                ValueUpdater(accountmoney[User], ChoiceSaver, 1);
+                                AccountCheck(accountmoney[User]); phase = MenuReturn();
+                                break;
+                            case 3:
+                                AccountCheck(accountmoney[User]);
+                                (phase, ChoiceSaver[0]) = From(accountmoney[User], 2);
+                                if (phase == -2) { Environment.Exit(0); }
+                                (phase, ChoiceSaver[2]) = Amount(accountmoney[User], ChoiceSaver, 2);
+                                if (phase == -2) { Environment.Exit(0); }
+                                Message(accountmoney[User], ChoiceSaver, 2);
+                                (phase) = PinCode(User);
+                                if (phase == -2) { Environment.Exit(0); }
+                                ValueUpdater(accountmoney[User], ChoiceSaver, 2);
+                                AccountCheck(accountmoney[User]); phase = MenuReturn();
+                                break;
+                            case 4:
+                                Console.Clear();
+                                phase = -1;
+                                break;
+                            default:
+                                {
+                                    Environment.Exit(0);
+                                    break;
+                                }
+                        }
+                        break;
+                        default:
+                        {
+                            Environment.Exit(0);
                             break;
-                        case 1:
-                            string[,] accounts = users();
-                            Users = login(accounts);
-                            break;
-                        case 2:
-                            int pick = Menu(Users);
-                            switch (pick)
-                            {
-                                case 1:
-                                    AccountCheck(accountmoney[Users]);
-                                    phase = MenuReturn();
-                                    break;
-                                case 2:
-                                    AccountCheck(accountmoney[Users]);
-                                    (phase, ChoiceSaver[0]) = From(accountmoney[Users], 1);
-                                    if (phase == -2) { break; }
-                                    (phase, ChoiceSaver[1]) = To(accountmoney[Users], ChoiceSaver);
-                                    if (phase == -2) { break; }
-                                    (phase, ChoiceSaver[2]) = Amount(accountmoney[Users], ChoiceSaver, 1);
-                                    if (phase == -2) { break; }
-                                    Message(accountmoney[Users], ChoiceSaver, 1);
-                                    (phase) = PinCode(Users);
-                                    if (phase == -2) { break; }
-                                    ValueUpdater(accountmoney[Users], ChoiceSaver, 1);
-                                    AccountCheck(accountmoney[Users]); phase = MenuReturn();
-                                    break;
-                                case 3:
-                                    AccountCheck(accountmoney[Users]);
-                                    (phase, ChoiceSaver[0]) = From(accountmoney[Users], 2);
-                                    if (phase == -2) { break; }
-                                    (phase, ChoiceSaver[2]) = Amount(accountmoney[Users], ChoiceSaver, 2);
-                                    if (phase == -2) { break; }
-                                    Message(accountmoney[Users], ChoiceSaver, 2);
-                                    (phase) = PinCode(Users);
-                                    if (phase == -2) { break; }
-                                    ValueUpdater(accountmoney[Users], ChoiceSaver, 2);
-                                    AccountCheck(accountmoney[Users]); phase = MenuReturn();
-                                    break;
-                                case 4:
-                                    Console.Clear();
-                                    phase = -1;
-                                    break;
-                            }
-                            break;
-                    }
-                }
-                else // Throws the user out of the bank.
-                {
-                    break;
-                }
+                        }
+                }     
             }
         }
-        public static void welcome() //Writes out a welcome message to the bank
+        public static void Welcome() //Writes out a welcome message to the bank
         {
             Console.WriteLine("Välkommen till banken");
         }
 
-        public static string[,] users() // Stores the accounts in a 2d string array
+        public static string[,] Users() // Stores the accounts in a 2d string array
         {
-            String[,] Users = new string[5, 2];
-            Users[0, 0] = "user1"; Users[0, 1] = "1111";
-            Users[1, 0] = "user2"; Users[1, 1] = "2222";
-            Users[2, 0] = "user3"; Users[2, 1] = "3333";
-            Users[3, 0] = "user4"; Users[3, 1] = "4444";
-            Users[4, 0] = "user5"; Users[4, 1] = "5555";
-            return Users;
+            String[,] User = new string[5, 2];
+            User[0, 0] = "user1"; User[0, 1] = "1111";
+            User[1, 0] = "user2"; User[1, 1] = "2222";
+            User[2, 0] = "user3"; User[2, 1] = "3333";
+            User[3, 0] = "user4"; User[3, 1] = "4444";
+            User[4, 0] = "user5"; User[4, 1] = "5555";
+            return User;
         }
 
-        public static int login(string[,] Users) // Login method for the users if it is succesful it returns the user position in the array if unsuccesful it returns -1
+        public static int Login(string[,] Users) // Login method for the users if it is succesful it returns the user position in the array if unsuccesful it returns -1
         {
             try
             {
@@ -138,29 +144,13 @@ namespace Internet_Bank
                 return -2; // any other exception is taken here
             }
         }
-        public static int Menu(int users) // Lists the 4 diffrent menus and lets the user choose an option
+        public static int Menu(string[,] users) // Lists the 4 diffrent menus and lets the user choose an option
         {
             for (int WelcomeMessage = 0; WelcomeMessage < 1; WelcomeMessage++)
             {
                 Console.Clear();
-                switch (users)
-                {
-                    case 0:
-                        Console.WriteLine("Välkommen till banken user1!");
-                        break;
-                    case 1:
-                        Console.WriteLine("Välkommen till banken user2");
-                        break;
-                    case 2:
-                        Console.WriteLine("Välkommen till banken user3");
-                        break;
-                    case 3:
-                        Console.WriteLine("Välkommen till banken user4");
-                        break;
-                    case 4:
-                        Console.WriteLine("Välkommen till banken user5");
-                        break;
-                }
+                Console.WriteLine("Välkommen {0}", users);
+                
             }
             string[] bankMenu = { "\n1. Se dina konton och saldo", "2. Överföring mellan konto", "3.Ta ut pengar", "4. Logga ut\n" };
             foreach (string list in bankMenu) Console.WriteLine(list);
@@ -168,7 +158,7 @@ namespace Internet_Bank
             for (int Tries = 0; Tries <3; Tries++) // counter for how many times the user has tried to login
             {
                 string choice = Console.ReadLine();
-                for (int counter = 0; counter <1; counter++) // Loop that checks if the user input matches with any of the options
+                for (int counter = 0; counter <1; counter++) // Loop that checks if the user input matches any of the choices
                 {
 
                     try
@@ -196,42 +186,37 @@ namespace Internet_Bank
             }
             return -2; // any other exception is taken here
         }
-        private static void AccountCheck(double[] MoneyAccount) // Writes out a specific users accounts depending on how many accounts they have.
+        private static void AccountCheck(double[] MoneyAccount) // Writes out a users number of accounts so it only writes out the accounts the user has
         {
             Console.Clear();
             if (MoneyAccount.Length == 1) // If the user has 1 account.
             {
-                StringBuilder user0 = new StringBuilder("[1] Lönekonto: ");
-                user0.AppendFormat("{0:C}", MoneyAccount[0]);
-                Console.WriteLine(user0.ToString());
+
+                Console.WriteLine("[1] Lönekonto: {0} kr", MoneyAccount[0]);
+
+
+
             }
             if (MoneyAccount.Length == 2) // If the user has 2 accounts.
             {
-                StringBuilder user0 = new StringBuilder("[1] Lönekonto: ");
-                user0.AppendFormat("{0:C}", MoneyAccount[0]);
-                Console.WriteLine(user0.ToString());
-                StringBuilder user00 = new StringBuilder("[2] Investeringssparkonto: ");
-                user00.AppendFormat("{0:C}", MoneyAccount[1]);
-                Console.WriteLine(user00.ToString());
+
+                Console.WriteLine("[1] Lönekonto: {0} kr", MoneyAccount[0]);
+                Console.WriteLine("[2] Investeringssparkonto: {0} kr", MoneyAccount[1]);
+
+
             }
             if (MoneyAccount.Length == 3) // If the user has 3 accounts.
             {
-                StringBuilder user0 = new StringBuilder("[1] Lönekonto: ");
-                user0.AppendFormat("{0:C}", MoneyAccount[0]);
-                Console.WriteLine(user0.ToString());
-                StringBuilder user00 = new StringBuilder("[2] Investeringssparkonto: ");
-                user00.AppendFormat("{0:C}", MoneyAccount[1]);
-                Console.WriteLine(user00.ToString());
-                StringBuilder user000 = new StringBuilder("[3] Sparkonto: ");
-                user000.AppendFormat("{0:C}", MoneyAccount[2]);
-                Console.WriteLine(user000.ToString());
+                Console.WriteLine("[1] Lönekonto: {0} kr", MoneyAccount[0]);
+                Console.WriteLine("[2] Investeringskonto: {0} kr", MoneyAccount[1]);
+                Console.WriteLine("[3] Sparkonto: {0} kr", MoneyAccount[2]);
             }
 
         }
         public static int MenuReturn()
         {
             Console.WriteLine("\nKlicka enter för att komma till huvudmenyn:");
-            for (int Tries = 0; Tries < 3; Tries++) // Loop taht returns the user to the menu if enter is pressed, if wrong input is typed more then 3 times the user is thrown back out of the bank.
+            for (int Tries = 0; Tries < 3; Tries++) // Loop that returns the user to the login menu and shuts down the program if the user writes incorrectly 3 times
             {
                 try
                 {
@@ -247,7 +232,7 @@ namespace Internet_Bank
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                    return -2; // Anny extra exception is captured here.
+                    return -2; // any other excetion is taken here
                 }
                 if (Tries == 2)
                 {
@@ -255,14 +240,14 @@ namespace Internet_Bank
                     return -2;
                 }
             }
-            return -2; // Anny extra exception is captured here.
+            return -2; // any other excetion is taken here
         }
-        public static (int, string) From(double[] MoneyAccount, int Decider) // Takes the user input on witch account they want to Transfer or Withdraw from.
+        public static (int, string) From(double[] MoneyAccount, int Decider) // takes the userinput to see if they want to withdraw or deposit and which account they want to do it from
         {
             int From1 = 0;
             int error = 0;
             int error2 = 0;
-            string[] PickSaver = { "" };
+            string[] ChoiceSaver = { "" };
 
             for (int attempt = 0; attempt <= 2; attempt++)
             {
@@ -274,7 +259,7 @@ namespace Internet_Bank
                     error2 = 0;
                     if (error == 3)
                     {
-                        return (-2, PickSaver[0]);
+                        return (-2, ChoiceSaver[0]);
                     }
                 }
                 catch
@@ -288,13 +273,13 @@ namespace Internet_Bank
                 }
                 if (From1 > 0 && From1 <= MoneyAccount.Length)
                 {
-                    PickSaver[0] = From1.ToString();
-                    return (0, PickSaver[0]);
+                    ChoiceSaver[0] = From1.ToString();
+                    return (0, ChoiceSaver[0]);
                 }
                 else if (attempt == 2)
                 {
                     Console.WriteLine("För många försök!");
-                    return (-2, PickSaver[0]);
+                    return (-2, ChoiceSaver[0]);
                 }
                 else
                 {
@@ -304,9 +289,9 @@ namespace Internet_Bank
                     }
                 }
             }
-            return (-2, PickSaver[0]); // Anny extra exception is captured here.
+            return (-2, ChoiceSaver[0]); // any other exception is taken here
         }
-        public static (int, string) To(double[] MoneyAccount, string[] ChoiceSaver) // Takes the user input on witch account they want to Transfer to.
+        public static (int, string) To(double[] MoneyAccount, string[] ChoiceSaver) // takes the userinput to see which account they want to transfer from
         {
             int From = int.Parse(ChoiceSaver[0]);
             int To = 0;
@@ -342,7 +327,7 @@ namespace Internet_Bank
                 else if (attempt == 2)
                 {
                     Console.WriteLine("För många försök!");
-                    return (-2, ChoiceSaver[1]);
+                    Environment.Exit(0);
                 }
                 else
                 {
@@ -352,7 +337,7 @@ namespace Internet_Bank
                     }
                 }
             }
-            return (-2, ChoiceSaver[1]); // Anny extra exception is captured here.
+            return (-2, ChoiceSaver[1]); // any other excetion is taken here
         }
         public static (int, string) Amount(double[] MoneyAccount, string[] PickSaver, int Decider) // Takes the user input on the amount that is getting Transfered or Withdrawn.
         {
@@ -418,7 +403,7 @@ namespace Internet_Bank
                     return (-2, PickSaver[2]);
                 }
             }
-            return (-2, PickSaver[2]); // Anny extra exception is captured here.
+            return (-2, PickSaver[2]); // any other excetion is taken here
         }
 
         public static void Message(double[] MoneyAccount, string[] PickSaver, int Decider) // Writes a message that tells the user what is about to happen based on the users earlier inputs. 
