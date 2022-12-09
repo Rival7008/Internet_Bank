@@ -1,98 +1,72 @@
 ﻿using System;
-using System.Text;
 
-namespace Internet_Bank
+namespace Internet_bank_2._0
 {
     class Program
     {
         static void Main(string[] args)
         {
-            int User = 0;
 
-            // Jagged Array with the users money accounts
             double[][] accountmoney = new double[5][];
-            accountmoney[0] = new double[3] { 390.23, 22320.33, 1023220.43 };
-            accountmoney[1] = new double[2] { 2334.44, 434542.65 };
-            accountmoney[2] = new double[2] { 5443.32, 10000 };
-            accountmoney[3] = new double[3] { 2934.48, 12374.94, 74323.20 };
-            accountmoney[4] = new double[2] { 1232.46, 187364.24 };
+            accountmoney[0] = new double[3] { 400, 500, 600 };
+            accountmoney[1] = new double[2] { 500, 600 };
+            accountmoney[2] = new double[2] { 600, 700 };
+            accountmoney[3] = new double[3] { 700, 800, 600 };
+            accountmoney[4] = new double[2] { 800, 900 };
 
-            // Array that saves user input that is being used in different methods.
-            string[] ChoiceSaver = { "", "", "" };
 
-            for (int phase = 0; phase <= 2; phase++) // tracks what phase in the bank we are in
+            Console.WriteLine("Välkommen till banken");
+
+            string[,] accounts = Users();
+            int LoginAttempt = Login(accounts);
+            Console.Clear();
+            Menu();
+            do
             {
 
-
-                switch (phase)
+                try
                 {
-                    case 0:
-                        Welcome();
-                        break;
-                    case 1:
-                        string[,] accounts = Users();
-                        User = Login(accounts);
-                        break;
-                    case 2:
-                        string[,] accounts2 = Users();
-                        int choice = Menu(accounts2);
-                        switch (choice)
-                        {
-                            case 1:
-                                AccountCheck(accountmoney[User]);
-                                phase = MenuReturn();
-                                break;
-                            case 2:
-                                AccountCheck(accountmoney[User]);
-                                (phase, ChoiceSaver[0]) = From(accountmoney[User], 1);
-                                if (phase == -2) { Environment.Exit(0); }
-                                (phase, ChoiceSaver[1]) = To(accountmoney[User], ChoiceSaver);
-                                if (phase == -2) { Environment.Exit(0); }
-                                (phase, ChoiceSaver[2]) = Amount(accountmoney[User], ChoiceSaver, 1);
-                                if (phase == -2) { Environment.Exit(0); }
-                                Message(accountmoney[User], ChoiceSaver, 1);
-                                (phase) = PinCode(User);
-                                if (phase == -2) { Environment.Exit(0); }
-                                ValueUpdater(accountmoney[User], ChoiceSaver, 1);
-                                AccountCheck(accountmoney[User]); phase = MenuReturn();
-                                break;
-                            case 3:
-                                AccountCheck(accountmoney[User]);
-                                (phase, ChoiceSaver[0]) = From(accountmoney[User], 2);
-                                if (phase == -2) { Environment.Exit(0); }
-                                (phase, ChoiceSaver[2]) = Amount(accountmoney[User], ChoiceSaver, 2);
-                                if (phase == -2) { Environment.Exit(0); }
-                                Message(accountmoney[User], ChoiceSaver, 2);
-                                (phase) = PinCode(User);
-                                if (phase == -2) { Environment.Exit(0); }
-                                ValueUpdater(accountmoney[User], ChoiceSaver, 2);
-                                AccountCheck(accountmoney[User]); phase = MenuReturn();
-                                break;
-                            case 4:
-                                Console.Clear();
-                                phase = -1;
-                                break;
-                            default:
-                                {
-                                    Environment.Exit(0);
-                                    break;
-                                }
-                        }
-                        break;
-                        default:
-                        {
-                            Environment.Exit(0);
-                            break;
-                        }
-                }     
-            }
-        }
-        public static void Welcome() //Writes out a welcome message to the bank
-        {
-            Console.WriteLine("Välkommen till banken");
-        }
+                    int choice = int.Parse(Console.ReadLine());
 
-        public static string[,] Users() // Stores the accounts in a 2d string array
+                    switch (choice)
+                    {
+                        case 1:
+                            AccountCheck(accountmoney[LoginAttempt]);
+                            Menu();
+                            break;
+
+                        case 2:
+                            AccountCheck(accountmoney[LoginAttempt]);
+                            Transfer(accountmoney[LoginAttempt]);
+
+
+                            break;
+
+                        case 3:
+                            AccountCheck(accountmoney[LoginAttempt]);
+                            TakeOutCash(accountmoney[LoginAttempt]);
+                        
+                            break;
+
+                        case 4:
+                            Console.Clear();
+                            LoginAttempt = Login(accounts);
+                            Menu();
+                            break;
+
+                    }
+                }
+                catch (FormatException)
+                {
+
+                }
+            } while (true);
+
+
+
+
+        }
+        public static string[,] Users()
         {
             String[,] User = new string[5, 2];
             User[0, 0] = "user1"; User[0, 1] = "1111";
@@ -102,410 +76,284 @@ namespace Internet_Bank
             User[4, 0] = "user5"; User[4, 1] = "5555";
             return User;
         }
-
-        public static int Login(string[,] Users) // Login method for the users if it is succesful it returns the user position in the array if unsuccesful it returns -1
+        public static int Login(string[,] Users)
         {
-            try
+
+
+            bool check = false;
+            int counter = 0;
+            for (int Tries = 0; Tries < 3; Tries++)
             {
-                bool check = false;
-                int counter = 0;
-                for (int Tries = 0; Tries < 3; Tries++) // counter for how many times the user has tried to login
-                {
-                    Console.WriteLine("Ange ditt användarnamn:");
-                    var name = Console.ReadLine().ToLower();
-                    Console.WriteLine("Ange din pinkod");
-                    var pincode = Console.ReadLine();
+                Console.WriteLine("Ange ditt användarnamn");
+                string name = Console.ReadLine();
+                Console.WriteLine("Ange din pinkod");
+                string pincode = Console.ReadLine();
 
-                    for (counter = 0; counter <= 4; counter++) // Loop that goes through all the accounts and tries to find one that match with the users input
+                for (counter = 0; counter <= 4; counter++)
+                {
+                    check = (name == Users[counter, 0] && pincode == Users[counter, 1]) ? true : false;
+                    if (check == true)
                     {
-                        check = (name == Users[counter, 0] && pincode == Users[counter, 1]) ? true : false;
-                        if (check == true)
-                        {
-                            int user = counter;
-                            return counter;
-                        }
-                        else if (counter == 4 && check == false)
-                        {
-                            Console.Clear();
-                            Console.WriteLine("Fel användarnamn eller pinkod");
-                        }
+                        int user = counter;
+                        return counter;
                     }
-                    if (Tries == 2 && check == false) // if the user fails to login in 3 tries it returns the value -1
+                    else if (counter == 4 && check == false)
                     {
-                        Console.WriteLine("Du har försökt logga in för många gånger!");
-                        return -2; //return -2 because the loop adds 1 value
+                        Console.Clear();
+                        Console.WriteLine("Fel användarnamn eller pinkod");
                     }
-                }
-                return -2; // any other exception is taken here
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return -2; // any other exception is taken here
-            }
-        }
-        public static int Menu(string[,] users) // Lists the 4 diffrent menus and lets the user choose an option
-        {
-            for (int WelcomeMessage = 0; WelcomeMessage < 1; WelcomeMessage++)
-            {
-                Console.Clear();
-                Console.WriteLine("Välkommen {0}", users);
-                
-            }
-            string[] bankMenu = { "\n1. Se dina konton och saldo", "2. Överföring mellan konto", "3.Ta ut pengar", "4. Logga ut\n" };
-            foreach (string list in bankMenu) Console.WriteLine(list);
-
-            for (int Tries = 0; Tries <3; Tries++) // counter for how many times the user has tried to login
-            {
-                string choice = Console.ReadLine();
-                for (int counter = 0; counter <1; counter++) // Loop that checks if the user input matches any of the choices
-                {
-
-                    try
-                    {
-                        if (choice == "1" || choice == "2" || choice == "3" || choice == "4")
-                        {
-                            return int.Parse(choice);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Ogiltigt val!\n");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        return -2; // any other exception is taken here
-                    }
-                }
-                if (Tries == 2)
-                {
-                    Console.WriteLine("Du har försökt för många gånger");
-                    return -2;
-                }
-            }
-            return -2; // any other exception is taken here
-        }
-        private static void AccountCheck(double[] MoneyAccount) // Writes out a users number of accounts so it only writes out the accounts the user has
-        {
-            Console.Clear();
-            if (MoneyAccount.Length == 1) // If the user has 1 account.
-            {
-
-                Console.WriteLine("[1] Lönekonto: {0} kr", MoneyAccount[0]);
-
-
-
-            }
-            if (MoneyAccount.Length == 2) // If the user has 2 accounts.
-            {
-
-                Console.WriteLine("[1] Lönekonto: {0} kr", MoneyAccount[0]);
-                Console.WriteLine("[2] Investeringssparkonto: {0} kr", MoneyAccount[1]);
-
-
-            }
-            if (MoneyAccount.Length == 3) // If the user has 3 accounts.
-            {
-                Console.WriteLine("[1] Lönekonto: {0} kr", MoneyAccount[0]);
-                Console.WriteLine("[2] Investeringskonto: {0} kr", MoneyAccount[1]);
-                Console.WriteLine("[3] Sparkonto: {0} kr", MoneyAccount[2]);
-            }
-
-        }
-        public static int MenuReturn()
-        {
-            Console.WriteLine("\nKlicka enter för att komma till huvudmenyn:");
-            for (int Tries = 0; Tries < 3; Tries++) // Loop that returns the user to the login menu and shuts down the program if the user writes incorrectly 3 times
-            {
-                try
-                {
-                    if (Console.ReadLine() == "")
-                    {
-                        return 1;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Ogilltigt val!");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    return -2; // any other excetion is taken here
-                }
-                if (Tries == 2)
-                {
-                    Console.WriteLine("För många försök!");
-                    return -2;
-                }
-            }
-            return -2; // any other excetion is taken here
-        }
-        public static (int, string) From(double[] MoneyAccount, int Decider) // takes the userinput to see if they want to withdraw or deposit and which account they want to do it from
-        {
-            int From1 = 0;
-            int error = 0;
-            int error2 = 0;
-            string[] ChoiceSaver = { "" };
-
-            for (int attempt = 0; attempt <= 2; attempt++)
-            {
-                try
-                {
-                    if (Decider == 1) { Console.Write("\nÖverför från:"); }
-                    else { Console.Write("\nTa ut från:"); }
-                    From1 = int.Parse(Console.ReadLine());
-                    error2 = 0;
-                    if (error == 3)
-                    {
-                        return (-2, ChoiceSaver[0]);
-                    }
-                }
-                catch
-                {
-                    if (attempt != 2)
-                    {
-                        Console.WriteLine("Ogilltig summa!");
-                        error++;
-                        error2++;
-                    }
-                }
-                if (From1 > 0 && From1 <= MoneyAccount.Length)
-                {
-                    ChoiceSaver[0] = From1.ToString();
-                    return (0, ChoiceSaver[0]);
-                }
-                else if (attempt == 2)
-                {
-                    Console.WriteLine("För många försök!");
-                    return (-2, ChoiceSaver[0]);
-                }
-                else
-                {
-                    if (error2 < 1)
-                    {
-                        Console.WriteLine("Ogilltigt konto!");
-                    }
-                }
-            }
-            return (-2, ChoiceSaver[0]); // any other exception is taken here
-        }
-        public static (int, string) To(double[] MoneyAccount, string[] ChoiceSaver) // takes the userinput to see which account they want to transfer from
-        {
-            int From = int.Parse(ChoiceSaver[0]);
-            int To = 0;
-            int error = 0;
-            int error2 = 0;
-
-            for (int attempt = 0; attempt <= 2; attempt++)
-            {
-                try
-                {
-                    Console.Write("\nÖverför till:");
-                    To = int.Parse(Console.ReadLine());
-                    error2 = 0;
-                    if (error == 3)
-                    {
-                        return (-2, ChoiceSaver[1]);
-                    }
-                }
-                catch
-                {
-                    if (attempt != 2)
-                    {
-                        Console.WriteLine("Ogilltigt konto!");
-                        error++;
-                        error2++;
-                    }
-                }
-                if (To > 0 && To <= MoneyAccount.Length && To != From)
-                {
-                    ChoiceSaver[1] = To.ToString();
-                    return (0, ChoiceSaver[1]);
-                }
-                else if (attempt == 2)
-                {
-                    Console.WriteLine("För många försök!");
-                    Environment.Exit(0);
-                }
-                else
-                {
-                    if (error2 < 1)
-                    {
-                        Console.WriteLine("Ogilltigt konto!");
-                    }
-                }
-            }
-            return (-2, ChoiceSaver[1]); // any other excetion is taken here
-        }
-        public static (int, string) Amount(double[] MoneyAccount, string[] PickSaver, int Decider) // Takes the user input on the amount that is getting Transfered or Withdrawn.
-        {
-            int From = int.Parse(PickSaver[0]);
-            if (Decider == 1) { int To = int.Parse(PickSaver[1]); }
-            double amount = Math.Round(0.00, 2);
-            int error = 0;
-            int error2 = 0;
-
-            for (int attempt = 0; attempt <= 2; attempt++)
-            {
-                try
-                {
-                    Console.Write("\nAmount: ");
-                    amount = Math.Round(double.Parse(Console.ReadLine()), 2);
-                    error2 = 0;
-                    if (error == 3)
-                    {
-                        return (-2, PickSaver[2]);
-                    }
-                }
-                catch
-                {
-                    if (attempt != 2)
-                    {
-                        Console.WriteLine("Ogilltig summa!");
-                        error++;
-                        error2++;
-                    }
-
-                }
-                switch (From)
-                {
-                    case 1:
-                        if (amount < MoneyAccount[0] && amount > 0)
-                        {
-                            PickSaver[2] = amount.ToString();
-                            return (2, PickSaver[2]);
-                        }
-                        break;
-                    case 2:
-                        if (amount < MoneyAccount[1] && amount > 0)
-                        {
-                            PickSaver[2] = amount.ToString();
-                            return (2, PickSaver[2]);
-                        }
-                        break;
-                    case 3:
-                        if (amount < MoneyAccount[2] && amount > 0)
-                        {
-                            PickSaver[2] = amount.ToString();
-                            return (2, PickSaver[2]);
-                        }
-                        break;
-                }
-                if (error2 < 1)
-                {
-                    Console.WriteLine("Ogilltig summa!");
-                }
-                else if (attempt == 2)
-                {
-                    Console.WriteLine("För många försök!");
-                    return (-2, PickSaver[2]);
-                }
-            }
-            return (-2, PickSaver[2]); // any other excetion is taken here
-        }
-
-        public static void Message(double[] MoneyAccount, string[] PickSaver, int Decider) // Writes a message that tells the user what is about to happen based on the users earlier inputs. 
-        {
-            int From = int.Parse(PickSaver[0]);
-            double amount = double.Parse(PickSaver[2]);
-
-            if (Decider == 1)
-            {
-                int To = int.Parse(PickSaver[1]);
-                StringBuilder user0 = new StringBuilder("Du kommer överföra ");
-                user0.AppendFormat("{0:C}", amount);
-                user0.AppendFormat(" till {0}", To);
-                Console.WriteLine(user0.ToString());
-            }
-            else
-            {
-                StringBuilder user0 = new StringBuilder("Du kommer ta ut ");
-                user0.AppendFormat("{0:C}", amount);
-                user0.AppendFormat(" från {0}", From);
-                Console.WriteLine(user0.ToString());
-            }
-        }
-        public static int PinCode(int Users) // The user needs to enter their pincode to confirm the change. 
-        {
-            for (int Tries = 0; Tries <= 2; Tries++)
-            {
-                int pin = 0;
-                int error = 0;
-                int error2 = 0;
-
-                try
-                {
-                    Console.WriteLine("Bekräfta genom att ange din pinkod:");
-                    pin = int.Parse(Console.ReadLine());
-                    error2 = 0;
-                    if (error == 3)
-                    {
-                        return -2;
-                    }
-                }
-                catch
-                {
-                    if (Tries != 2)
-                    {
-                        Console.WriteLine("Ogilltigt format!");
-                        error++;
-                        error2++;
-                    }
-                }
-
-                switch (Users)
-                {
-                    case 0:
-                        if (pin == 1111) { Console.Clear(); Console.WriteLine("Lyckad ändring!"); return 2; }
-                        break;
-                    case 1:
-                        if (pin == 2222) { Console.Clear(); Console.WriteLine("Lyckad ändring!"); return 2; }
-                        break;
-                    case 2:
-                        if (pin == 3333) { Console.Clear(); Console.WriteLine("Lyckad ändring!"); return 2; }
-                        break;
-                    case 3:
-                        if (pin == 4444) { Console.Clear(); Console.WriteLine("Lyckad ändring!"); return 2; }
-                        break;
-                    case 4:
-                        if (pin == 5555) { Console.Clear(); Console.WriteLine("Lyckad ändring!"); return 2; }
-                        break;
-                }
-                if (error2 < 1)
-                {
-                    Console.WriteLine("Ogilltig pinkod!");
-                }
-                else if (Tries == 2)
-                {
-                    Console.WriteLine("För många försök!");
-                    return -2;
                 }
             }
             return -2;
         }
-        public static void ValueUpdater(double[] MoneyAccount, string[] PickSaver, int Decider) // Updates the values, Decider == 1 is if you Transfered and Decider == 2 is if you Withdrawed.
-        {
-            int From = int.Parse(PickSaver[0]);
-            double amount = double.Parse(PickSaver[2]);
 
-            if (Decider == 1)
+            private static void AccountCheck(double[] MoneyAccount)
             {
-                int To = int.Parse(PickSaver[1]);
-                MoneyAccount[From - 1] = MoneyAccount[From - 1] - amount;
-                Console.WriteLine(MoneyAccount[From - 1]);
-                MoneyAccount[To - 1] = MoneyAccount[To - 1] + amount;
-                Console.WriteLine(MoneyAccount[To - 1]);
+                Console.Clear();
+
+                if (MoneyAccount.Length == 1)
+                {
+                    Console.WriteLine($"[1] Lönekonto: {MoneyAccount[0]} kr");
+                }
+
+                if (MoneyAccount.Length == 2)
+                {
+                    Console.WriteLine($"[1] Lönekonto: {MoneyAccount[0]} kr");
+                    Console.WriteLine($"[2] Investeringkonto {MoneyAccount[1]} kr");
+                }
+
+                if (MoneyAccount.Length == 3)
+                {
+                    Console.WriteLine($"[1] Lönekonto: {MoneyAccount[0]} kr");
+                    Console.WriteLine($"[2] Investeringkonto {MoneyAccount[1]} kr");
+                    Console.WriteLine($"[3] Sparkonto: {MoneyAccount[2]} kr");
+                }
             }
-            else
+
+        private static void Transfer(double[] MoneyAccount)
+        {
+            Console.WriteLine("Välj kontot du vill överföra från");
+
+            double x = Convert.ToDouble(Console.ReadLine());
+
+            
+
+            if(x == 1)
             {
-                MoneyAccount[From - 1] = MoneyAccount[From - 1] - amount;
-                Console.WriteLine(MoneyAccount[From - 1]);
+                Console.WriteLine("Välj kontot du vill överföra till");
+
+                double y = Convert.ToDouble(Console.ReadLine());
+
+                Console.WriteLine("Hur mycket vill du överföra");
+
+                double TransferMoney = Convert.ToDouble(Console.ReadLine());
+
+                if (y == 1)
+                {
+                    Console.WriteLine("Du kan inte överföra till samma konto");
+                    Environment.Exit(0);
+                }
+                if (y == 2)
+                {
+                    double NewBalance2 = MoneyAccount[1] + TransferMoney;
+                    Console.WriteLine($"Ditt Investeringskonto har nu {NewBalance2} kr");
+                }
+                if (y == 3)
+                {
+                    double NewBalance2 = MoneyAccount[2] + TransferMoney;
+
+                    Console.WriteLine($"Ditt Sparkonto har nu {NewBalance2} kr");
+                }
+
+                double NewBalance = MoneyAccount[0] - TransferMoney;
+
+                Console.WriteLine($"Ditt Lönekonto har nu {NewBalance} kr");
+
+                Console.ReadKey();
+                Console.Clear();
+                Menu();
+
+
+            }
+
+            if(x == 2)
+            {
+                Console.WriteLine("Välj kontot du vill överföra till");
+
+                double y = Convert.ToDouble(Console.ReadLine());
+
+                Console.WriteLine("Hur mycket vill du överföra");
+
+                double TransferMoney = Convert.ToDouble(Console.ReadLine());
+
+
+
+                if (y == 1)
+                {
+                    double NewBalance2 = MoneyAccount[0] + TransferMoney;
+                    Console.WriteLine($"Ditt Lönekonto har nu {NewBalance2} kr");
+                }
+                if (y == 2)
+                {
+                    Console.WriteLine("Du kan inte överföra till samma konto");
+                    Environment.Exit(0);
+                }
+                if (y == 3)
+                {
+                    double NewBalance2 = MoneyAccount[2] + TransferMoney;
+                    Console.WriteLine($"Ditt Sparkonto har nu {NewBalance2} kr");
+                }
+
+                double NewBalance = MoneyAccount[1] - TransferMoney;
+
+                Console.WriteLine($"Ditt Investeringskonto har nu {NewBalance} kr");
+
+                Console.ReadKey();
+                Console.Clear();
+                Menu();
+            }
+
+            if(x == 3)
+            {
+                Console.WriteLine("Välj kontot du vill överföra till");
+
+                double y = Convert.ToDouble(Console.ReadLine());
+
+                
+
+                Console.WriteLine("Hur mycket vill du överföra");
+
+                double TransferMoney = Convert.ToDouble(Console.ReadLine());
+
+                if (y == 1)
+                {
+                    double NewBalance2 = MoneyAccount[0] + TransferMoney;
+                    Console.WriteLine($"Ditt Lönekonto har nu {NewBalance2} kr");
+                }
+                if (y == 2)
+                {
+                    double NewBalance2 = MoneyAccount[1] + TransferMoney;
+                    Console.WriteLine($"Ditt Investeringskonto har nu {NewBalance2} kr");
+                }
+                if (y == 3)
+                {
+                    Console.WriteLine("Du kan inte överföra till samma konto");
+                    Environment.Exit(0);
+                }
+
+                double NewBalance = MoneyAccount[2] - TransferMoney;
+
+                Console.WriteLine($"Ditt sparkonto har nu {NewBalance} kr");
+
+                Console.ReadKey();
+                Console.Clear();
+                Menu();
+            }
+            
+            
+        }
+
+        private static void TakeOutCash(double[] MoneyAccount)
+        {
+            Console.WriteLine("Välj vilket konto du vill ta ut pengar från");
+
+            int x = Convert.ToInt32(Console.ReadLine());
+
+            if (x == 1)
+            {
+                Console.WriteLine("Hur mycket pengar vill du ta ut?");
+
+                double y = Convert.ToDouble(Console.ReadLine());
+
+                if (y > MoneyAccount[0])
+                {
+                    Console.WriteLine("Ogiltig Summa");
+                    Environment.Exit(0);
+
+                }
+                if (MoneyAccount[0] > y)
+                {
+                    double NewBalance = MoneyAccount[0] - y;
+
+                    //NewBalance = MoneyAccount[0];
+
+                    Console.WriteLine($"Ditt Lönekonto har nu {NewBalance} kr");
+
+                    
+                    Menu();
+                }
+            }
+
+            if (x == 2)
+            {
+                    Console.WriteLine("Hur mycket pengar vill du ta ut?");
+
+                    double a = Convert.ToDouble(Console.ReadLine());
+
+                    if (a > MoneyAccount[1])
+                    {
+                        Console.WriteLine("Ogiltig Summa");
+                        Environment.Exit(0);
+
+                    }
+                    if (MoneyAccount[0] > a)
+                    {
+                        double NewBalance = MoneyAccount[1] - a;
+
+
+
+                        Console.WriteLine($"Ditt Investeringskonto har nu {NewBalance} kr");
+
+                    
+
+                    Menu();
+                }
+            }
+
+            if (x == 3)
+            {
+                    Console.WriteLine("Hur mycket pengar vill du ta ut?");
+
+                    double b = Convert.ToDouble(Console.ReadLine());
+
+                    if (b > MoneyAccount[2])
+                    {
+                        Console.WriteLine("Ogiltig Summa");
+                        Environment.Exit(0);
+
+                    }
+                    if (MoneyAccount[2] > b)
+                    {
+                        double NewBalance = MoneyAccount[2] - b;
+
+                        //NewBalance = MoneyAccount[0];
+
+                        Console.WriteLine($"Ditt Sparkonto har nu {NewBalance} kr");
+
+                    
+                    Menu();
+                    }
+                
             }
         }
-    }
-}
 
-    
+        
+             
+
+            
+
+
+        
+        public static void Menu()
+        {
+            Console.WriteLine("             Välkommen till banken.           ");
+            Console.WriteLine("--------------------------------------");
+            Console.WriteLine("|    [1.]  Se dina konton och saldo");
+            Console.WriteLine("|    [2.]  Överför mellan konton");
+            Console.WriteLine("|    [3.]  Ta ut pengar");
+            Console.WriteLine("|    [4.]  Logga ut");
+            Console.WriteLine("--------------------------------------");
+        }
+    }    
+}
 
